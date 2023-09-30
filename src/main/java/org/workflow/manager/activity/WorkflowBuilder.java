@@ -1,2 +1,5 @@
-package org.workflow.manager.activity;public class WorkflowBuilder {
+package org.workflow.manager.activity;
+
+public class WorkflowBuilder {
+
 }
