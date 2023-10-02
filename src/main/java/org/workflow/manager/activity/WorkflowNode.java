@@ -63,7 +63,7 @@ public class WorkflowNode<C extends ContextObject> {
 
         try {
             return service.run(input);
-        } catch (final ServiceException e) {
+        } catch (final Exception e) {
             final String id = serviceType.getSimpleName();
             final String stackMsg = Arrays.stream(e.getStackTrace())
                     .map(StackTraceElement::toString)
