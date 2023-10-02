@@ -3,15 +3,13 @@ package org.workflow.manager.activity;
 import com.google.inject.Module;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.workflow.manager.constants.WorkflowResponses;
 import org.workflow.manager.exceptions.ServiceException;
-import org.workflow.manager.exceptions.WorkflowException;
 import org.workflow.manager.models.ContextObject;
+import org.workflow.manager.models.FailedWorkflowResponse;
 import org.workflow.manager.models.Service;
 import org.workflow.manager.models.WorkflowResponse;
 import org.workflow.manager.tools.GuiceConfig;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -74,7 +72,7 @@ public class WorkflowNode<C extends ContextObject> {
             log.error("{} : Reason {}", id, e.getMessage());
             log.error("{} : Stack Trace {}", id, stackMsg);
 
-            return WorkflowResponses.FAILED_WORKFLOW;
+            return new FailedWorkflowResponse("FAILED_TO_RUN_THE_WORKFLOW");
         }
     }
 }
