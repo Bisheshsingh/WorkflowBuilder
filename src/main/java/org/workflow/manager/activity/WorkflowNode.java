@@ -24,6 +24,7 @@ public class WorkflowNode<C extends ContextObject> {
     @Getter
     private final Class<? extends Service<C>> serviceType;
     private final List<Module> modules;
+    private Service<C> service;
 
     public boolean areAllDependencyRan() {
         return responseDependency.isEmpty();
@@ -57,8 +58,8 @@ public class WorkflowNode<C extends ContextObject> {
     }
 
     public WorkflowResponse execute(final C input) {
-        final Service<C> service = GuiceConfig.init(modules)
-                .getInjector().getInstance(serviceType);
+        service = (service == null) ? GuiceConfig.init(modules)
+                .getInjector().getInstance(serviceType) : service;
 
         try {
             return service.run(input);
