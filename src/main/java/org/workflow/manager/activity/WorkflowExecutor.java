@@ -18,8 +18,10 @@ public class WorkflowExecutor<C extends ContextObject> {
             log.error("Unknown Listener error in {}", response);
             WORKFLOW_STATUS = WorkflowStatus.FAILED;
         } else if (response instanceof FailedWorkflowResponse) {
+            log.error("Workflow failed because of {}", response);
             WORKFLOW_STATUS = WorkflowStatus.FAILED;
         } else if (workflow.getEndResponses().contains(response)) {
+            log.info("Workflow Completed Successfully with response : {}", response);
             WORKFLOW_STATUS = WorkflowStatus.SUCCESSFUL;
         } else {
             status = Boolean.FALSE;
