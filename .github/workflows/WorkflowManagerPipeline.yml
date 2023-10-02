@@ -10,6 +10,7 @@ on:
 jobs:
   Build:
     runs-on: ubuntu-latest
+    
     steps:
       - name: Adding Project
         uses: actions/checkout@v4.1.0
@@ -24,7 +25,9 @@ jobs:
         run: gradle clean build -i
 
   Release:
+     needs: Build
      runs-on: ubuntu-latest
+     
      steps:
       - name: Adding Project
         uses: actions/checkout@v4.1.0
