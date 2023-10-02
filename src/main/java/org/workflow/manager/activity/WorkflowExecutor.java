@@ -9,13 +9,29 @@ import org.workflow.manager.models.WorkflowResponse;
 
 @Slf4j
 public class WorkflowExecutor<C extends ContextObject> {
-    private static WorkflowStatus WORKFLOW_STATUS;
-    private final Workflow<C> workflow;
+    private volatile WorkflowStatus WORKFLOW_STATUS;
 
-    private void emitResponse(final WorkflowResponse currentResponse, final C context) {
-        if (workflow.getResponseActions().get(currentResponse) == null
-                || !WORKFLOW_STATUS.equals(WorkflowStatus.IN_PROGRESS)) {
-            log.info("There is no listener for {}", currentResponse);
+    private Boolean handleWorkflowResponse(final WorkflowResponse response,
+                                           final Workflow<C> workflow) {
+        Boolean status = Boolean.TRUE;
+        if (workflow.getResponseActions().get(response) == null) {
+            log.error("Unknown Listener error in {}", response);
+            WORKFLOW_STATUS = WorkflowStatus.FAILED;
+        } else if (response instanceof FailedWorkflowResponse) {
+            WORKFLOW_STATUS = WorkflowStatus.FAILED;
+        } else if (workflow.getEndResponses().contains(response)) {
+            WORKFLOW_STATUS = WorkflowStatus.SUCCESSFUL;
+        } else {
+            status = Boolean.FALSE;
+        }
+
+        return status;
+    }
+
+    private void emitResponse(final WorkflowResponse currentResponse,
+                              final Workflow<C> workflow, final C context) {
+        if (!WORKFLOW_STATUS.equals(WorkflowStatus.IN_PROGRESS)
+                || handleWorkflowResponse(currentResponse, workflow)) {
             return;
         }
 
@@ -29,32 +45,38 @@ public class WorkflowExecutor<C extends ContextObject> {
 
                     final WorkflowResponse response = node.execute(context);
 
-                    if (!WORKFLOW_STATUS.equals(WorkflowStatus.IN_PROGRESS)) {
-                        return;
-                    } else if (response instanceof FailedWorkflowResponse) {
-                        WORKFLOW_STATUS = WorkflowStatus.FAILED;
-                    } else if (workflow.getEndResponses().contains(response)) {
-                        WORKFLOW_STATUS = WorkflowStatus.SUCCESSFUL;
-                    }
-
                     log.info("{} service ran with response : {}", serviceName, response);
-                    emitResponse(response, context);
+                    emitResponse(response, workflow, context);
                 }
             }).start();
         }
     }
 
-    public WorkflowExecutor(final Workflow<C> workflow) {
-        this.workflow = workflow;
+    private void waitForExecutionToComplete() throws InterruptedException {
+        while(WORKFLOW_STATUS.equals(WorkflowStatus.IN_PROGRESS)) {
+            Thread.sleep(10);
+        }
+    }
+
+    public WorkflowExecutor() {
         WORKFLOW_STATUS = WorkflowStatus.PENDING;
     }
 
-    public void execute(final C context) {
+    public void execute(final Workflow<C> workflow, final C context) {
         WORKFLOW_STATUS = WorkflowStatus.IN_PROGRESS;
         for (final WorkflowResponse response : workflow.getTriggerResponses()) {
             new Thread(() -> {
-                emitResponse(response, context);
+                emitResponse(response, workflow, context);
             }).start();
         }
+    }
+
+    public void execute(final Workflow<C> workflow, final C context,
+                        final Boolean shouldWaitForExecutionToComplete) throws InterruptedException {
+        if(shouldWaitForExecutionToComplete) {
+            waitForExecutionToComplete();
+        }
+
+        execute(workflow, context);
     }
 }
