@@ -78,6 +78,5 @@ public class WorkflowExecutor<C extends ContextObject> {
         if(shouldWaitForExecutionToComplete) {
             waitForExecutionToComplete();
         }
-
     }
 }
