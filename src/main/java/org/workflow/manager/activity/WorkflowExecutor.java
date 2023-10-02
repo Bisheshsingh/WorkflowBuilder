@@ -73,10 +73,10 @@ public class WorkflowExecutor<C extends ContextObject> {
 
     public void execute(final Workflow<C> workflow, final C context,
                         final Boolean shouldWaitForExecutionToComplete) throws InterruptedException {
+        execute(workflow, context);
+
         if(shouldWaitForExecutionToComplete) {
             waitForExecutionToComplete();
         }
-
-        execute(workflow, context);
     }
 }
