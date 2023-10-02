@@ -1,0 +1,30 @@
+name: Pipeline
+
+on:
+  push:
+    branches: [ "mainline" ]
+  pull_request:
+    branches: [ "mainline" ]
+  workflow_dispatch:
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Adding Project
+        uses: actions/checkout@v4.1.0
+        
+      - name: JDK Set Up
+        uses: actions/setup-java@v3.12.0
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          
+      - name: Build
+        run: gradle clean build -i
+
+  Release:
+     runs-on: ubuntu-latest
+     steps:
+      - name: Adding Project
+        uses: actions/checkout@v4.1.0
