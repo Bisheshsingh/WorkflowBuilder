@@ -39,8 +39,8 @@ public class WorkflowNode<C extends ContextObject> {
                     .map(StackTraceElement::toString)
                     .collect(Collectors.joining("\n"));
 
-            if(currentRetryCount > 0) {
-                log.error("{} : Retry {}/{} Faied", id, currentRetryCount, totalRetryCount);
+            if (currentRetryCount > 0) {
+                log.error("{} : Retry {}/{} Failed", id, currentRetryCount, totalRetryCount);
             } else {
                 log.error("{} : Failed to run the workflow", id);
             }
@@ -48,9 +48,9 @@ public class WorkflowNode<C extends ContextObject> {
             log.error("{} : Reason {}", id, e.getMessage());
             log.error("{} : Stack Trace {}", id, stackMsg);
 
-            if(currentRetryCount < totalRetryCount) {
+            if (currentRetryCount < totalRetryCount) {
                 log.info("{} : Retry {}/{} Started", id,
-                        currentRetryCount, totalRetryCount);
+                        currentRetryCount + 1, totalRetryCount);
 
                 return execute(input, currentRetryCount + 1, totalRetryCount);
             }
