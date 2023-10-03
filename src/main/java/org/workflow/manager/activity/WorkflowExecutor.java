@@ -14,15 +14,15 @@ public class WorkflowExecutor<C extends ContextObject> {
     private Boolean handleWorkflowResponse(final WorkflowResponse response,
                                            final Workflow<C> workflow) {
         Boolean status = Boolean.TRUE;
-        if (workflow.getResponseActions().get(response) == null) {
-            log.error("Unknown Listener error in {}", response);
-            WORKFLOW_STATUS = WorkflowStatus.FAILED;
-        } else if (response instanceof FailedWorkflowResponse) {
+        if (response instanceof FailedWorkflowResponse) {
             log.error("Workflow failed because of {}", response);
             WORKFLOW_STATUS = WorkflowStatus.FAILED;
         } else if (workflow.getEndResponses().contains(response)) {
             log.info("Workflow Completed Successfully with response : {}", response);
             WORKFLOW_STATUS = WorkflowStatus.SUCCESSFUL;
+        } else if (workflow.getResponseActions().get(response) == null) {
+            log.error("Unknown Listener error in {}", response);
+            WORKFLOW_STATUS = WorkflowStatus.FAILED;
         } else {
             status = Boolean.FALSE;
         }
@@ -55,7 +55,7 @@ public class WorkflowExecutor<C extends ContextObject> {
     }
 
     private void waitForExecutionToComplete() throws InterruptedException {
-        while(WORKFLOW_STATUS.equals(WorkflowStatus.IN_PROGRESS)) {
+        while (WORKFLOW_STATUS.equals(WorkflowStatus.IN_PROGRESS)) {
             Thread.sleep(10);
         }
     }
@@ -77,7 +77,7 @@ public class WorkflowExecutor<C extends ContextObject> {
                         final Boolean shouldWaitForExecutionToComplete) throws InterruptedException {
         execute(workflow, context);
 
-        if(shouldWaitForExecutionToComplete) {
+        if (shouldWaitForExecutionToComplete) {
             waitForExecutionToComplete();
         }
     }
