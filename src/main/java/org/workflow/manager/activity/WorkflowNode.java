@@ -3,7 +3,7 @@ package org.workflow.manager.activity;
 import com.google.inject.Module;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.workflow.manager.exceptions.ServiceException;
+import org.workflow.manager.annotations.Retry;
 import org.workflow.manager.models.ContextObject;
 import org.workflow.manager.models.FailedWorkflowResponse;
 import org.workflow.manager.models.Service;
@@ -25,6 +25,39 @@ public class WorkflowNode<C extends ContextObject> {
     private final Class<? extends Service<C>> serviceType;
     private final List<Module> modules;
     private Service<C> service;
+
+    private WorkflowResponse execute(final C input, final Integer currentRetryCount,
+                                     final Integer totalRetryCount) {
+        service = (service == null) ? GuiceConfig.init(modules)
+                .getInjector().getInstance(serviceType) : service;
+
+        try {
+            return service.run(input);
+        } catch (final Exception e) {
+            final String id = serviceType.getSimpleName();
+            final String stackMsg = Arrays.stream(e.getStackTrace())
+                    .map(StackTraceElement::toString)
+                    .collect(Collectors.joining("\n"));
+
+            if(currentRetryCount > 0) {
+                log.error("{} : Retry {}/{} Faied", id, currentRetryCount, totalRetryCount);
+            } else {
+                log.error("{} : Failed to run the workflow", id);
+            }
+
+            log.error("{} : Reason {}", id, e.getMessage());
+            log.error("{} : Stack Trace {}", id, stackMsg);
+
+            if(currentRetryCount < totalRetryCount) {
+                log.info("{} : Retry {}/{} Started", id,
+                        currentRetryCount, totalRetryCount);
+
+                return execute(input, currentRetryCount + 1, totalRetryCount);
+            }
+
+            return new FailedWorkflowResponse("FAILED_TO_RUN_THE_WORKFLOW");
+        }
+    }
 
     public boolean areAllDependencyRan() {
         return responseDependency.isEmpty();
@@ -58,22 +91,9 @@ public class WorkflowNode<C extends ContextObject> {
     }
 
     public WorkflowResponse execute(final C input) {
-        service = (service == null) ? GuiceConfig.init(modules)
-                .getInjector().getInstance(serviceType) : service;
+        final Integer retryCount = serviceType.isAnnotationPresent(Retry.class) ?
+                serviceType.getAnnotation(Retry.class).count() : 0;
 
-        try {
-            return service.run(input);
-        } catch (final Exception e) {
-            final String id = serviceType.getSimpleName();
-            final String stackMsg = Arrays.stream(e.getStackTrace())
-                    .map(StackTraceElement::toString)
-                    .collect(Collectors.joining("\n"));
-
-            log.error("{} : Failed to run the workflow", id);
-            log.error("{} : Reason {}", id, e.getMessage());
-            log.error("{} : Stack Trace {}", id, stackMsg);
-
-            return new FailedWorkflowResponse("FAILED_TO_RUN_THE_WORKFLOW");
-        }
+        return execute(input, 0, retryCount);
     }
 }
