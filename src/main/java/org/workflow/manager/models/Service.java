@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @Slf4j
-public abstract class Service <T extends ContextObject> {
-    public WorkflowResponse run(T input) {
+public abstract class Service<T extends ContextObject> {
+    public WorkflowResponse run(T input) throws ServiceException {
         WorkflowResponse response = null;
 
         try {
@@ -22,10 +22,11 @@ public abstract class Service <T extends ContextObject> {
             log.error("Reason {}", e.getMessage());
             log.error("Stack Trace {}", stackMsg);
 
-            response = new FailedWorkflowResponse("FAILED_TO_RUN_THE_SERVICE");
+            response = new FailedWorkflowResponse("FAILED_TO_RUN_THE_SERVICE", e);
         }
 
         return response;
     }
+
     protected abstract WorkflowResponse performAction(T input) throws ServiceException;
 }

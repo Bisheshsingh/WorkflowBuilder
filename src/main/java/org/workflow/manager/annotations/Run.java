@@ -1,2 +1,14 @@
-package org.workflow.manager.annotations;public @interface Run {
+package org.workflow.manager.annotations;
+
+import org.workflow.manager.constants.RunLevels;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface Run {
+    String level() default RunLevels.DEFAULT;
 }
