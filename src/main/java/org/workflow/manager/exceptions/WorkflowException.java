@@ -1,7 +1,7 @@
 package org.workflow.manager.exceptions;
 
 import lombok.Getter;
-import org.workflow.manager.models.FailedWorkflowResponse;
+import org.workflow.manager.responses.FailedWorkflowResponse;
 import org.workflow.manager.models.WorkflowResponse;
 
 @Getter

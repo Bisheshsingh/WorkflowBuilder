@@ -2,6 +2,8 @@ package org.workflow.manager.models;
 
 import lombok.Data;
 
+import javax.print.DocFlavor;
+
 @Data
 public abstract class WorkflowResponse {
     protected final String stateName;

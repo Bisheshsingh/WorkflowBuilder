@@ -2,13 +2,14 @@ package org.workflow.manager.models;
 
 import lombok.extern.slf4j.Slf4j;
 import org.workflow.manager.exceptions.ServiceException;
+import org.workflow.manager.responses.FailedWorkflowResponse;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @Slf4j
 public abstract class Service<T extends ContextObject> {
-    public WorkflowResponse run(T input) throws ServiceException {
+    public WorkflowResponse run(T input) {
         WorkflowResponse response = null;
 
         try {

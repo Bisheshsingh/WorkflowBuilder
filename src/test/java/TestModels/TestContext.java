@@ -1,9 +1,8 @@
 package TestModels;
 
-import lombok.Data;
 import org.workflow.manager.models.ContextObject;
 
-public class TestContext implements ContextObject {
+public class TestContext extends ContextObject {
     private String txt1;
     private String txt2;
     private String txt3;

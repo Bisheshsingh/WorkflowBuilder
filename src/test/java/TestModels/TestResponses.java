@@ -1,8 +1,8 @@
 package TestModels;
 
-import org.workflow.manager.models.EndWorkflowResponse;
-import org.workflow.manager.models.FailedWorkflowResponse;
-import org.workflow.manager.models.SuccessWorkflowResponse;
+import org.workflow.manager.responses.EndWorkflowResponse;
+import org.workflow.manager.responses.FailedWorkflowResponse;
+import org.workflow.manager.responses.SuccessWorkflowResponse;
 import org.workflow.manager.models.WorkflowResponse;
 
 public class TestResponses {

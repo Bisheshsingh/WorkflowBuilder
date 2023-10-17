@@ -4,6 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class GuiceConfig {
@@ -11,16 +12,15 @@ public class GuiceConfig {
     private static Injector injector;
 
     public GuiceConfig() {
-        this(binder -> {
-        });
+        this(binder -> {});
     }
 
     public GuiceConfig(final List<Module> modules) {
         injector = Guice.createInjector(modules);
     }
 
-    public GuiceConfig(final Module module) {
-        injector = Guice.createInjector(module);
+    public GuiceConfig(final Module... modules) {
+        injector = Guice.createInjector(modules);
     }
 
     public <T> T getInstance(Class<T> clazz) {
@@ -31,11 +31,25 @@ public class GuiceConfig {
         return injector.getInstance(clazz);
     }
 
-    public static GuiceConfig init(final Module module) {
+    public Injector getInjector() {
         if (config == null) {
-            config = new GuiceConfig(module);
-        } else {
-            injector = Guice.createInjector(module);
+            config = new GuiceConfig();
+        }
+
+        return injector;
+    }
+
+    public static GuiceConfig init(final Module... modules) {
+        if (config == null) {
+            init(Arrays.asList(modules));
+        }
+
+        return config;
+    }
+
+    public static GuiceConfig init() {
+        if(config == null) {
+            return init(binder ->{});
         }
 
         return config;
@@ -49,13 +63,5 @@ public class GuiceConfig {
         }
 
         return config;
-    }
-
-    public Injector getInjector() {
-        if (config == null) {
-            config = new GuiceConfig();
-        }
-
-        return injector;
     }
 }

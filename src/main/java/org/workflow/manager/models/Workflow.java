@@ -1,8 +1,8 @@
 package org.workflow.manager.models;
 
 import lombok.Getter;
-import org.workflow.manager.activity.FailedWorkflowNode;
-import org.workflow.manager.activity.WorkflowNode;
+import org.workflow.manager.workflow_nodes.FailedWorkflowNode;
+import org.workflow.manager.workflow_nodes.WorkflowNode;
 
 import java.util.HashMap;
 import java.util.Map;
