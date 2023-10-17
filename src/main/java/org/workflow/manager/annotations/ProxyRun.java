@@ -6,8 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Retry {
-    int count() default 3;
-    int coolDown() default 0;
+@Target(ElementType.METHOD)
+public @interface ProxyRun {
+    String[] levels();
 }

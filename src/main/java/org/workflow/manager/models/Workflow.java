@@ -1,22 +1,20 @@
 package org.workflow.manager.models;
 
-import lombok.Data;
-import org.workflow.manager.activity.WorkflowNode;
+import lombok.Getter;
+import org.workflow.manager.workflow_nodes.FailedWorkflowNode;
+import org.workflow.manager.workflow_nodes.WorkflowNode;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@Data
+@Getter
 public abstract class Workflow<C extends ContextObject> {
-    protected final Map<WorkflowResponse, Set<WorkflowNode<C>>> responseActions;
-    protected final Set<WorkflowResponse> triggerResponses;
-    protected final Set<WorkflowResponse> endResponses;
+    protected Map<WorkflowResponse, Set<WorkflowNode<C>>> responseActions;
+    protected Map<WorkflowResponse, Set<FailedWorkflowNode<C>>> failedResponseActions;
 
     protected Workflow() {
         this.responseActions = new HashMap<>();
-        this.triggerResponses = new HashSet<>();
-        this.endResponses = new HashSet<>();
+        this.failedResponseActions = new HashMap<>();
     }
 }
