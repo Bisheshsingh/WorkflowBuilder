@@ -17,9 +17,16 @@ public class WorkflowStatusVerifier<C extends ContextObject>
         WorkflowStatus status = WorkflowStatus.IN_PROGRESS;
 
         if (context.getResponse() instanceof FailedWorkflowResponse) {
-            status = WorkflowStatus.FAILED;
+            if (context.getConfig().getFailedResponseActions().get(context.getResponse()) == null) {
+                status = WorkflowStatus.FORCE_CLOSE;
+
+            } else {
+                status = WorkflowStatus.FAILED;
+            }
+
             log.error("Workflow failed because of {} : {}",
-                    context.getResponse().getStateName(), new FailedWorkflowResponse(context.getResponse()).getErrorMessage());
+                    context.getResponse().getStateName(),
+                    new FailedWorkflowResponse(context.getResponse()).getErrorMessage());
         } else if (context.getResponse() instanceof EndWorkflowResponse) {
             status = WorkflowStatus.SUCCESSFUL;
             log.info("Workflow Completed Successfully with response : {}", context.getResponse());
