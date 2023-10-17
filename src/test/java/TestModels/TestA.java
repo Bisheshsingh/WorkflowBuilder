@@ -18,4 +18,19 @@ public class TestA extends Service<TestContext> {
         context.setTxt1("DryRun");
         return TestResponses.SuccessfulResponses.A_PASSED;
     }
+
+    @ProxyRun(levels = {"wrongParams"})
+    public WorkflowResponse wrongParams(String context) {
+        return TestResponses.SuccessfulResponses.A_PASSED;
+    }
+
+    @ProxyRun(levels = {"wrongReturnType"})
+    public String wrongReturnType(TestContext context) {
+        return TestResponses.SuccessfulResponses.A_PASSED.getStateName();
+    }
+
+    @ProxyRun(levels = {"multipleParams"})
+    public String multipleParams(TestContext context, String x) {
+        return TestResponses.SuccessfulResponses.A_PASSED.getStateName();
+    }
 }

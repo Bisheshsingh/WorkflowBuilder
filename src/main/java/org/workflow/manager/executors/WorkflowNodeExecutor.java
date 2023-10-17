@@ -86,8 +86,9 @@ public class WorkflowNodeExecutor<C extends ContextObject>
             return WAITING_RESPONSE;
         }
 
-        final AnnotationHandlerContext annotationHandlerContext =
-                new AnnotationHandlerContext(workflowNode.getServiceType(), level);
+        final AnnotationHandlerContext annotationHandlerContext = new AnnotationHandlerContext();
+        annotationHandlerContext.setLevel(level);
+        annotationHandlerContext.setServiceType(context.getNode().getServiceType());
 
         annotationProcessor.process(annotationHandlerContext);
 
