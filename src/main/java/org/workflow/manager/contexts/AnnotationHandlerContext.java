@@ -10,8 +10,8 @@ import java.lang.reflect.Method;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class AnnotationHandlerContext extends ContextObject {
-    private final Class<? extends Service<? extends ContextObject>> serviceType;
-    private final String level;
+    private Class<? extends Service<? extends ContextObject>> serviceType;
+    private String level;
     private Integer retryCount;
     private Integer retryCoolDownTime;
     private Method method;
