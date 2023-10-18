@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'jacoco'
 }
 
 group = 'org.design.patterns'
@@ -26,3 +27,68 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+jacoco {
+    toolVersion = "0.8.11"
+}
+
+ext.jacocoExcludes = [
+        'org/workflow/manager/annotations/**',
+        'org/workflow/manager/constants/**',
+        'org/workflow/manager/contexts/**',
+        'org/workflow/manager/exceptions/**',
+        'org/workflow/manager/models/**',
+        'org/workflow/manager/tools/**',
+        'org/workflow/manager/responses/**',
+        'org/workflow/manager/workflow_nodes/**',
+        'org/workflow/manager/workflow_operations/**',
+]
+
+tasks.withType(Test).configureEach {
+    jacoco {
+        excludes = jacocoExcludes
+    }
+
+    doLast {
+        println("Excluded packages for Jacoco tests : ")
+        jacoco.excludes.forEach {println(it)}
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+        csv.required = true
+        html.destination file("${buildDir}/jacocoReportDir")
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: jacocoExcludes)
+        }))
+    }
+
+    doLast {
+        println "You can check Jacoco Reports: ${buildDir}/jacocoReportDir/index.html"
+    }
+}
+
+jacocoTestCoverageVerification {
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: jacocoExcludes)
+        }))
+    }
+
+    violationRules {
+        rule {
+            limit {
+                minimum = 1.0
+            }
+        }
+    }
+
+    dependsOn(jacocoTestReport)
+}
+
+build.finalizedBy jacocoTestCoverageVerification

@@ -3,6 +3,7 @@ package org.workflow.manager.executors;
 import com.google.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import org.workflow.manager.processors.AnnotationProcessor;
+import org.workflow.manager.tools.ThreadTools;
 import org.workflow.manager.verifiers.WorkflowNodeExecutionVerifier;
 import org.workflow.manager.exceptions.AnnotationHandleException;
 import org.workflow.manager.exceptions.WorkflowException;
@@ -51,11 +52,7 @@ public class WorkflowNodeExecutor<C extends ContextObject>
             log.error("{} : Response : {}", id, e.getResponse());
 
             if (retryCount <= annotationHandlerContext.getRetryCount()) {
-                try {
-                    Thread.sleep(annotationHandlerContext.getRetryCoolDownTime());
-                } catch (InterruptedException ex) {
-                    throw new WorkflowException(ex);
-                }
+                ThreadTools.sleep(annotationHandlerContext.getRetryCoolDownTime());
 
                 log.info("{} : Retry {}/{} Started", id, retryCount, annotationHandlerContext.getRetryCount());
 

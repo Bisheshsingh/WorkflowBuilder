@@ -11,7 +11,7 @@ import static TestModels.TestResponses.FailedResponses.*;
 public class TestConfig extends WorkflowConfig<TestContext> {
     @Override
     public void configureSuccessNodes(final SuccessNodeBinder<TestContext> binder) throws BinderException {
-        binder.bindWaitingResponses(START_WORKFLOW).to(TestA.class);
+        binder.bindDirectResponses(START_WORKFLOW).to(TestA.class);
         binder.bindWaitingResponses(A_PASSED).to(TestB.class);
         binder.bindWaitingResponses(A_PASSED).to(TestC.class);
         binder.bindWaitingResponses(B_PASSED, C_PASSED).to(TestD.class);

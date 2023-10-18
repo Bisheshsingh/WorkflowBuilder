@@ -40,19 +40,11 @@ public class GuiceConfig {
     }
 
     public static GuiceConfig init(final Module... modules) {
-        if (config == null) {
-            init(Arrays.asList(modules));
-        }
-
-        return config;
+        return init(Arrays.asList(modules));
     }
 
     public static GuiceConfig init() {
-        if(config == null) {
-            return init(binder ->{});
-        }
-
-        return config;
+        return init(binder ->{});
     }
 
     public static GuiceConfig init(final List<Module> modules) {
