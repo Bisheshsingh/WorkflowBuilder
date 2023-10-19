@@ -33,7 +33,6 @@ jacoco {
 }
 
 ext.jacocoExcludes = [
-        'org/workflow/manager/annotations/**',
         'org/workflow/manager/constants/**',
         'org/workflow/manager/contexts/**',
         'org/workflow/manager/exceptions/**',
@@ -92,6 +91,10 @@ jacocoTestCoverageVerification {
 }
 
 spotbugsMain {
+    ignoreFailures = false
+    effort = 'max'
+    reportLevel = 'high'
+    showProgress = true
     excludeFilter = file('src/test/resources/FindBugs.xml')
 
     reports {
@@ -106,6 +109,11 @@ spotbugsMain {
 }
 
 spotbugsTest {
+    ignoreFailures = false
+    effort = 'max'
+    reportLevel = 'high'
+    showProgress = true
+
     reports {
         html {
             enabled = true;

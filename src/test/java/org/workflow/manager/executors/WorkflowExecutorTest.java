@@ -17,6 +17,7 @@ import org.workflow.manager.handlers.SuccessfulWorkflowResponseHandler;
 import org.workflow.manager.models.WorkflowConfig;
 import org.workflow.manager.models.WorkflowResponse;
 import org.workflow.manager.models.WorkflowOperation;
+import org.workflow.manager.tools.ThreadTools;
 import org.workflow.manager.verifiers.WorkflowStatusVerifier;
 
 import java.util.HashMap;
@@ -125,15 +126,14 @@ public class WorkflowExecutorTest {
     public void testWaitAndRelease() {
         workflowExecutor.lockExecution();
 
-        Thread th = new Thread(() -> workflowExecutor.waitForExecution());
-        th.start();
+        new Thread(() -> {
+            ThreadTools.sleep(1000);
+            workflowExecutor.notifyExecution();
+        }).start();
 
-        assertEquals(true, workflowExecutor.getLock());
-
-        workflowExecutor.notifyExecution();
+        workflowExecutor.waitForExecution();
 
         assertEquals(false, workflowExecutor.getLock());
-        th.interrupt();
     }
 
     @Test
