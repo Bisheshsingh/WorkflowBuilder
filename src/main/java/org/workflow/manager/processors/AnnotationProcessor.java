@@ -20,8 +20,7 @@ public class AnnotationProcessor implements Processor<AnnotationHandlerContext> 
     public void process(final AnnotationHandlerContext context) throws AnnotationHandleException {
         try {
             handlers.parallelStream().forEach(handlerClass -> {
-                final AnnotationHandler handler = GuiceConfig
-                        .init().getInstance(handlerClass);
+                final AnnotationHandler handler = GuiceConfig.getInstance(handlerClass);
 
                 try {
                     handler.handle(context);

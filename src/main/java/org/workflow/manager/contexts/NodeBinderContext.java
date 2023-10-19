@@ -8,7 +8,7 @@ import org.workflow.manager.models.WorkflowResponse;
 
 @Builder
 @Getter
-public class NodeBinderContext<C extends ContextObject> extends ContextObject{
+public class NodeBinderContext extends ContextObject{
     private WorkflowResponse[] waitingResponseDependencies;
     private WorkflowResponse[] directResponseDependencies;
 }

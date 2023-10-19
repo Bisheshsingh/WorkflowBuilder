@@ -31,7 +31,7 @@ public class WorkflowStatusVerifierTest {
 
     @BeforeEach
     void setUp() throws BinderException {
-        GuiceConfig.init().getInjector().injectMembers(this);
+        GuiceConfig.getInjector().injectMembers(this);
         config.configure(null);
     }
 

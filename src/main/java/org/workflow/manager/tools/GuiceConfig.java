@@ -3,57 +3,47 @@ package org.workflow.manager.tools;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-
-import java.util.Arrays;
-import java.util.List;
+import com.google.inject.util.Modules;
 
 public class GuiceConfig {
-    private static GuiceConfig config;
+    private static Module module;
     private static Injector injector;
 
-    public GuiceConfig() {
-        this(binder -> {});
+    private static Module getModule() {
+        if(module == null) {
+            return binder -> {};
+        }
+
+        return module;
     }
 
-    public GuiceConfig(final List<Module> modules) {
-        injector = Guice.createInjector(modules);
-    }
-
-    public GuiceConfig(final Module... modules) {
-        injector = Guice.createInjector(modules);
-    }
-
-    public <T> T getInstance(Class<T> clazz) {
-        if (config == null) {
-            config = new GuiceConfig();
+    public static <T> T getInstance(Class<T> clazz) {
+        if (injector == null) {
+            injector = Guice.createInjector(getModule());
         }
 
         return injector.getInstance(clazz);
     }
 
-    public Injector getInjector() {
-        if (config == null) {
-            config = new GuiceConfig();
+    public static <T> T getInstance(Class<T> clazz, Module... overrideModules) {
+        module = Modules.override(getModule()).with(overrideModules);
+        injector = Guice.createInjector(module);
+
+        return injector.getInstance(clazz);
+    }
+
+    public static Injector getInjector() {
+        if (injector == null) {
+            injector = Guice.createInjector(getModule());
         }
 
         return injector;
     }
 
-    public static GuiceConfig init(final Module... modules) {
-        return init(Arrays.asList(modules));
-    }
+    public static Injector getInjector(Module... overrideModules) {
+        module = Modules.override(getModule()).with(overrideModules);
+        injector = Guice.createInjector(module);
 
-    public static GuiceConfig init() {
-        return init(binder ->{});
-    }
-
-    public static GuiceConfig init(final List<Module> modules) {
-        if (config == null) {
-            config = new GuiceConfig(modules);
-        } else {
-            injector = Guice.createInjector(modules);
-        }
-
-        return config;
+        return injector;
     }
 }

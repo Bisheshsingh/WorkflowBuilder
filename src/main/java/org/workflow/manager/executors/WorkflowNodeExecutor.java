@@ -90,7 +90,7 @@ public class WorkflowNodeExecutor<C extends ContextObject>
         annotationProcessor.process(annotationHandlerContext);
 
         final Service<C> service = workflowNode.getService() == null ?
-                GuiceConfig.init().getInstance(workflowNode.getServiceType())
+                GuiceConfig.getInstance(workflowNode.getServiceType())
                 : workflowNode.getService();
 
         workflowNode.setService(service);

@@ -11,18 +11,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.workflow.manager.annotations.Retry;
 import org.workflow.manager.constants.WorkflowResponses;
 import org.workflow.manager.contexts.WorkflowNodeExecutionContext;
 import org.workflow.manager.exceptions.AnnotationHandleException;
-import org.workflow.manager.exceptions.ServiceException;
 import org.workflow.manager.exceptions.WorkflowException;
-import org.workflow.manager.models.Service;
 import org.workflow.manager.models.WorkflowResponse;
-import org.workflow.manager.responses.FailedWorkflowResponse;
 import org.workflow.manager.tools.GuiceConfig;
 import org.workflow.manager.verifiers.WorkflowNodeExecutionVerifier;
 import org.workflow.manager.workflow_nodes.WorkflowNode;
@@ -45,11 +40,11 @@ public class WorkflowNodeExecutorTest {
 
     @BeforeEach
     public void setUp() {
-        workflowNodeExecutor = GuiceConfig.init(binder ->
+        workflowNodeExecutor = GuiceConfig.getInjector(binder ->
                         binder.bind(new TypeLiteral<WorkflowNodeExecutionVerifier<TestContext>>() {
                                 })
                                 .toInstance(workflowNodeExecutionVerifier))
-                .getInjector().getInstance(Key.get(new TypeLiteral<>() {
+                .getInstance(Key.get(new TypeLiteral<>() {
                 }));
 
         workflowNode = new WorkflowNode<>(TestB.class);

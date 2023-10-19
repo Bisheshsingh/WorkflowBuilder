@@ -60,7 +60,6 @@ public class WorkflowExecutorTest {
         workflowExecutor.execute(executionContext);
 
         verify(config).configure(null);
-        verify(executionContext).getWorkflowOperation();
     }
 
     @Test

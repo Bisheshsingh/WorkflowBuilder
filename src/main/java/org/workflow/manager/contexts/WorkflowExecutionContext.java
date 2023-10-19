@@ -19,6 +19,7 @@ public class WorkflowExecutionContext<C extends ContextObject> extends ContextOb
 
     @Override
     public WorkflowExecutionContext<C> clone() throws CloneNotSupportedException {
+        super.clone();
         return new WorkflowExecutionContext<>(config, level, context, workflowOperation);
     }
 }
