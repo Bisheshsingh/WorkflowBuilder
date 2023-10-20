@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'jacoco'
+    id 'com.github.spotbugs' version '4.4.0'
 }
 
 group = 'org.design.patterns'
@@ -20,9 +22,107 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
     testImplementation 'org.mockito:mockito-junit-jupiter:5.6.0'
-
 }
 
 test {
     useJUnitPlatform()
 }
+
+jacoco {
+    toolVersion = "0.8.11"
+}
+
+ext.jacocoExcludes = [
+        'org/workflow/manager/constants/**',
+        'org/workflow/manager/contexts/**',
+        'org/workflow/manager/exceptions/**',
+        'org/workflow/manager/models/**',
+        'org/workflow/manager/tools/**',
+        'org/workflow/manager/responses/**',
+        'org/workflow/manager/workflow_nodes/**',
+        'org/workflow/manager/workflow_operations/**',
+]
+
+tasks.withType(Test).configureEach {
+    jacoco {
+        excludes = jacocoExcludes
+    }
+
+    doLast {
+        println("Excluded packages for Jacoco tests : ")
+        jacoco.excludes.forEach {println(it)}
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+        csv.required = true
+        html.destination file("${buildDir}/jacocoReportDir")
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: jacocoExcludes)
+        }))
+    }
+
+    doLast {
+        println "You can check Jacoco Reports: ${buildDir}/jacocoReportDir/index.html"
+    }
+}
+
+jacocoTestCoverageVerification {
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: jacocoExcludes)
+        }))
+    }
+
+    violationRules {
+        rule {
+            limit {
+                minimum = 1.0
+            }
+        }
+    }
+
+    dependsOn(jacocoTestReport)
+}
+
+spotbugsMain {
+    ignoreFailures = false
+    effort = 'max'
+    reportLevel = 'high'
+    showProgress = true
+    excludeFilter = file('src/test/resources/FindBugs.xml')
+
+    reports {
+        html {
+            enabled = true;
+        }
+
+        xml {
+            enabled = false
+        }
+    }
+}
+
+spotbugsTest {
+    ignoreFailures = false
+    effort = 'max'
+    reportLevel = 'high'
+    showProgress = true
+
+    reports {
+        html {
+            enabled = true;
+        }
+
+        xml {
+            enabled = false
+        }
+    }
+}
+
+build.finalizedBy jacocoTestCoverageVerification

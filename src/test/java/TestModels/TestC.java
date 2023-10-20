@@ -10,12 +10,6 @@ public class TestC extends Service<TestContext> {
     protected WorkflowResponse performAction(TestContext input) throws ServiceException {
         input.setTxt3(String.format("%sed", input.getTxt1()));
 
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new ServiceException(e);
-        }
-
         return TestResponses.SuccessfulResponses.C_PASSED;
     }
 

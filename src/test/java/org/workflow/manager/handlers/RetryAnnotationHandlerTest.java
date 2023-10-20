@@ -40,6 +40,14 @@ class RetryAnnotationHandlerTest {
         }
     }
 
+    @Retry(count = -2, coolDown = 10)
+    private static class InvalidCountServiceType2 extends Service<TestContext> {
+        @Override
+        protected WorkflowResponse performAction(TestContext input) throws ServiceException {
+            return null;
+        }
+    }
+
     @Retry(count = 10, coolDown = -5)
     private static class InvalidCoolDownServiceType extends Service<TestContext> {
         @Override
@@ -72,6 +80,16 @@ class RetryAnnotationHandlerTest {
     @Test
     void testHandleWithInvalidCount() {
         mockContext.setServiceType(InvalidCountServiceType.class);
+
+        final AnnotationHandleException e =
+                assertThrows(AnnotationHandleException.class, () -> handler.handle(mockContext));
+
+        assertTrue(e.getMessage().startsWith("Invalid Retry Count"));
+    }
+
+    @Test
+    void testHandleWithInvalidCount2() {
+        mockContext.setServiceType(InvalidCountServiceType2.class);
 
         final AnnotationHandleException e =
                 assertThrows(AnnotationHandleException.class, () -> handler.handle(mockContext));

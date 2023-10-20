@@ -37,6 +37,8 @@ public class WorkflowOrchestrator {
             case FAILED:
                 workflowExecutor.getFailedWorkflowResponseHandler().handle(context);
                 break;
+            default:
+                break;
         }
     }
 }

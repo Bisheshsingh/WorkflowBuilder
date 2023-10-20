@@ -58,8 +58,7 @@ public class WorkflowRunner {
     public <C extends ContextObject> WorkflowResponse run(final WorkflowResponse startResponse,
                                                           final C context) throws BinderException {
 
-        final WorkflowExecutor<C> workflowExecutor = (WorkflowExecutor<C>) GuiceConfig.init(modules)
-                .getInjector()
+        final WorkflowExecutor<C> workflowExecutor = (WorkflowExecutor<C>) GuiceConfig.getInjector(modules)
                 .getInstance(Key.get(new TypeLiteral<WorkflowExecutor<ContextObject>>() {}));
 
         workflowExecutor.execute(config, context,

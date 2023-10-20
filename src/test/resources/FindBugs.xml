@@ -1,0 +1,10 @@
+<FindBugsFilter>
+    <Match>
+        <Class name="~org\.workflow\.manager\.contexts\..*" />
+    </Match>
+
+    <Match>
+        <Class name="~org\.workflow\.manager\.responses\..*" />
+    </Match>
+</FindBugsFilter>
+

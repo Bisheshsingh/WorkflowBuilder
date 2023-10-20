@@ -14,7 +14,7 @@ public class WorkflowNode<C extends ContextObject> {
     private final Set<WorkflowResponse> directDependencies;
     private final Set<WorkflowResponse> waitingDependencies;
     private final Set<WorkflowResponse> markedDependencies;
-    private final Class<? extends Service<C>> serviceType;
+    private Class<? extends Service<C>> serviceType;
     private Service<C> service;
 
     public <T extends Service<C>> WorkflowNode(final Class<T> serviceType) {

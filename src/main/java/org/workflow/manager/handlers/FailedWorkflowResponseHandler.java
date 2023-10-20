@@ -7,7 +7,7 @@ import org.workflow.manager.contexts.WorkflowExecutionContext;
 import org.workflow.manager.contexts.WorkflowNodeExecutionContext;
 import org.workflow.manager.exceptions.AnnotationHandleException;
 import org.workflow.manager.exceptions.WorkflowException;
-import org.workflow.manager.executors.FailedWorkflowNodeExecutor;
+import org.workflow.manager.executors.WorkflowNodeExecutor;
 import org.workflow.manager.models.ContextObject;
 import org.workflow.manager.models.WorkflowResponse;
 import org.workflow.manager.models.WorkflowResponseHandler;
@@ -21,7 +21,7 @@ import java.util.Set;
 @Slf4j
 public class FailedWorkflowResponseHandler<C extends ContextObject> extends WorkflowResponseHandler<C> {
     @Inject
-    private FailedWorkflowNodeExecutor<C> failedWorkflowNodeExecutor;
+    private WorkflowNodeExecutor<FailedHandlerContextObject<C>> failedWorkflowNodeExecutor;
 
     @Override
     public Void handle(final WorkflowExecutionContext<C> input) {

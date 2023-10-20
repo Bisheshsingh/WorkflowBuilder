@@ -4,7 +4,7 @@ import org.workflow.manager.contexts.NodeBinderContext;
 import org.workflow.manager.exceptions.BinderException;
 
 public abstract class NodeBinder<C extends ContextObject, S extends Service<?>>
-        implements Binder<NodeBinderContext<C>, Class<? extends S>> {
+        implements Binder<NodeBinderContext, Class<? extends S>> {
     protected WorkflowResponse[] waitingResponseDependencies;
     protected WorkflowResponse[] directResponseDependencies;
     protected final Workflow<C> workflow;
@@ -14,7 +14,7 @@ public abstract class NodeBinder<C extends ContextObject, S extends Service<?>>
     }
 
     @Override
-    public final Binder<NodeBinderContext<C>, Class<? extends S>> bind(final NodeBinderContext<C> data) {
+    public final Binder<NodeBinderContext, Class<? extends S>> bind(final NodeBinderContext data) {
         this.directResponseDependencies = data.getDirectResponseDependencies();
         this.waitingResponseDependencies = data.getWaitingResponseDependencies();
 

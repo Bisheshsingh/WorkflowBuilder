@@ -2,6 +2,7 @@ package org.workflow.manager.executors;
 
 import com.google.inject.Inject;
 import lombok.Data;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.workflow.manager.constants.WorkflowResponses;
 import org.workflow.manager.contexts.WorkflowExecutionContext;
@@ -20,7 +21,7 @@ import java.util.HashSet;
 
 
 @Slf4j
-@Data
+@Getter
 public class WorkflowExecutor<C extends ContextObject> {
     @Inject
     private SuccessfulWorkflowResponseHandler<C> successfulWorkflowResponseHandler;
@@ -32,9 +33,13 @@ public class WorkflowExecutor<C extends ContextObject> {
     private volatile Boolean lock;
     private volatile WorkflowResponse workflowResponse;
 
-    private void waitForExecution() {
+    public void waitForExecution() {
         while (lock) {
         }
+    }
+
+    public void lockExecution() {
+        this.lock = true;
     }
 
     public void notifyExecution() {

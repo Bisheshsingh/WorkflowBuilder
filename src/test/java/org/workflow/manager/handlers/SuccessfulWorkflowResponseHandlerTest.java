@@ -4,16 +4,11 @@ import TestModels.TestConfig;
 import TestModels.TestContext;
 import TestModels.TestOperation;
 import TestModels.TestResponses;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.workflow.manager.contexts.WorkflowExecutionContext;
 import org.workflow.manager.exceptions.AnnotationHandleException;
@@ -22,7 +17,6 @@ import org.workflow.manager.exceptions.WorkflowException;
 import org.workflow.manager.executors.WorkflowNodeExecutor;
 
 import org.workflow.manager.models.WorkflowResponse;
-import org.workflow.manager.tools.WorkflowOrchestrator;
 
 
 import static org.mockito.Mockito.*;
@@ -48,13 +42,6 @@ class SuccessfulWorkflowResponseHandlerTest {
     @InjectMocks
     private TestConfig config;
 
-    @BeforeAll
-    public static void setAllUp() {
-        try (MockedStatic<WorkflowOrchestrator> mocked = Mockito.mockStatic(WorkflowOrchestrator.class)) {
-            System.out.println("Mocking Static Orchestrator");
-        }
-    }
-
     @BeforeEach
     void setUp() throws BinderException, CloneNotSupportedException {
         config.configure(null);
@@ -72,7 +59,7 @@ class SuccessfulWorkflowResponseHandlerTest {
 
         handler.handle(mockExecutionContext);
 
-        verify(workflowNodeExecutor).execute(any());
+        verify(workflowNodeExecutor, times(4)).execute(any());
     }
 
     @Test
@@ -81,7 +68,7 @@ class SuccessfulWorkflowResponseHandlerTest {
 
         handler.handle(mockExecutionContext);
 
-        verify(workflowNodeExecutor).execute(any());
+        verify(workflowNodeExecutor, times(4)).execute(any());
     }
 
     @Test
@@ -90,7 +77,7 @@ class SuccessfulWorkflowResponseHandlerTest {
 
         handler.handle(mockExecutionContext);
 
-        verify(workflowNodeExecutor).execute(any());
+        verify(workflowNodeExecutor, times(4)).execute(any());
     }
 
     @Test
@@ -99,6 +86,6 @@ class SuccessfulWorkflowResponseHandlerTest {
 
         handler.handle(mockExecutionContext);
 
-        verify(mockExecutionContext).clone();
+        verify(mockExecutionContext, times(4)).clone();
     }
 }

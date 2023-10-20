@@ -1,10 +1,12 @@
 package TestModels;
 
 import org.workflow.manager.annotations.ProxyRun;
+import org.workflow.manager.annotations.Retry;
 import org.workflow.manager.exceptions.ServiceException;
 import org.workflow.manager.models.Service;
 import org.workflow.manager.models.WorkflowResponse;
 
+@Retry
 public class TestA extends Service<TestContext> {
     @Override
     protected WorkflowResponse performAction(TestContext input) throws ServiceException {
@@ -30,7 +32,7 @@ public class TestA extends Service<TestContext> {
     }
 
     @ProxyRun(levels = {"multipleParams"})
-    public String multipleParams(TestContext context, String x) {
-        return TestResponses.SuccessfulResponses.A_PASSED.getStateName();
+    public WorkflowResponse run(TestContext context, String x) {
+        return TestResponses.SuccessfulResponses.A_PASSED;
     }
 }
