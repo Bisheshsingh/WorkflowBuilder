@@ -1,5 +1,6 @@
 package org.workflow.manager.node_binders;
 
+import lombok.NonNull;
 import org.workflow.manager.exceptions.BinderException;
 import org.workflow.manager.responses.FailedWorkflowResponse;
 import org.workflow.manager.responses.SuccessWorkflowResponse;
@@ -48,21 +49,21 @@ public class SuccessNodeBinder<C extends ContextObject> extends NodeBinder<C, Se
     }
 
     @Override
-    public SuccessNodeBinder<C> bindDirectResponses(WorkflowResponse... responses) throws BinderException {
+    public SuccessNodeBinder<C> bindDirectResponses(final WorkflowResponse... responses) throws BinderException {
         verifyResponses(responses);
         this.directResponseDependencies = responses;
         return this;
     }
 
     @Override
-    public SuccessNodeBinder<C> bindWaitingResponses(WorkflowResponse... responses) throws BinderException {
+    public SuccessNodeBinder<C> bindWaitingResponses(final WorkflowResponse... responses) throws BinderException {
         verifyResponses(responses);
         this.waitingResponseDependencies = responses;
         return this;
     }
 
     @Override
-    public void to(final Class<? extends Service<C>> data) {
+    public void to(@NonNull final Class<? extends Service<C>> data) {
         final WorkflowNode<C> workflowNode = new WorkflowNode<>(data);
 
         workflowNode.addDirectResponseDependency(directResponseDependencies);

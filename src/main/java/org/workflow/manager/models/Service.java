@@ -24,6 +24,16 @@ public abstract class Service<T extends ContextObject> {
             log.error("Stack Trace {}", stackMsg);
 
             response = new FailedWorkflowResponse("FAILED_TO_RUN_THE_SERVICE", e);
+        } catch(final Exception e) {
+            final String stackMsg = Arrays.stream(e.getStackTrace())
+                    .map(StackTraceElement::toString)
+                    .collect(Collectors.joining("\n"));
+
+            log.error("Failed to run the service due to some unknown exception");
+            log.error("Reason {}", e.getMessage());
+            log.error("Stack Trace {}", stackMsg);
+
+            response = new FailedWorkflowResponse("FAILED_TO_RUN_THE_SERVICE_UNKNOWN_EXCEPTION", e);
         }
 
         return response;

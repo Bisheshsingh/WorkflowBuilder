@@ -1,5 +1,6 @@
 package org.workflow.manager.node_binders;
 
+import lombok.NonNull;
 import org.workflow.manager.exceptions.BinderException;
 import org.workflow.manager.responses.FailedWorkflowResponse;
 import org.workflow.manager.workflow_nodes.FailedWorkflowNode;
@@ -49,7 +50,7 @@ public class FailedNodeBinder<C extends ContextObject>
     }
 
     @Override
-    public void to(final Class<? extends FailedHandlerService<C>> data) {
+    public void to(@NonNull final Class<? extends FailedHandlerService<C>> data) {
         final FailedWorkflowNode<C> workflowNode = new FailedWorkflowNode<>(data);
 
         workflowNode.addDirectResponseDependency(directResponseDependencies);

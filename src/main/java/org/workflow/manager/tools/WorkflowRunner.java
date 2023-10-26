@@ -3,6 +3,7 @@ package org.workflow.manager.tools;
 import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
+import lombok.NonNull;
 import org.workflow.manager.exceptions.BinderException;
 import org.workflow.manager.executors.WorkflowExecutor;
 import org.workflow.manager.models.ContextObject;
@@ -35,28 +36,28 @@ public class WorkflowRunner {
         return instance;
     }
 
-    public WorkflowRunner withWorkflowOperation(final WorkflowOperation workflowOperation) {
+    public WorkflowRunner withWorkflowOperation(@NonNull final WorkflowOperation workflowOperation) {
         this.workflowOperation = workflowOperation;
         return instance;
     }
 
-    public WorkflowRunner withModules(final Module... modules) {
+    public WorkflowRunner withModules(@NonNull final Module... modules) {
         this.modules = modules;
         return instance;
     }
 
-    public WorkflowRunner withLevel(final String level) {
+    public WorkflowRunner withLevel(@NonNull final String level) {
         this.level = level;
         return instance;
     }
 
-    public <C extends ContextObject> WorkflowRunner withConfig(final WorkflowConfig<C> config) {
+    public <C extends ContextObject> WorkflowRunner withConfig(@NonNull final WorkflowConfig<C> config) {
         this.config = config;
         return instance;
     }
 
-    public <C extends ContextObject> WorkflowResponse run(final WorkflowResponse startResponse,
-                                                          final C context) throws BinderException {
+    public <C extends ContextObject> WorkflowResponse run(@NonNull final WorkflowResponse startResponse,
+                                                          @NonNull final C context) throws BinderException {
 
         final WorkflowExecutor<C> workflowExecutor = (WorkflowExecutor<C>) GuiceConfig.getInjector(modules)
                 .getInstance(Key.get(new TypeLiteral<WorkflowExecutor<ContextObject>>() {}));

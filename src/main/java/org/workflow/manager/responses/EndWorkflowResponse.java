@@ -1,9 +1,10 @@
 package org.workflow.manager.responses;
 
+import lombok.NonNull;
 import org.workflow.manager.models.WorkflowResponse;
 
 public class EndWorkflowResponse extends WorkflowResponse {
-    public EndWorkflowResponse(final String stateName) {
+    public EndWorkflowResponse(@NonNull final String stateName) {
         super(stateName);
     }
 
