@@ -1,6 +1,7 @@
 package org.workflow.manager.responses;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 import org.workflow.manager.models.WorkflowResponse;
@@ -12,20 +13,20 @@ public class FailedWorkflowResponse extends WorkflowResponse {
     private String errorMessage;
     private StackTraceElement[] stackTraces;
 
-    public FailedWorkflowResponse(final String stateName, final String errorMessage,
+    public FailedWorkflowResponse(@NonNull final String stateName, final String errorMessage,
                                   final StackTraceElement[] stackTraces) {
         super(stateName);
         this.errorMessage = errorMessage;
         this.stackTraces = stackTraces;
     }
 
-    public FailedWorkflowResponse(final String stateName, final Exception e) {
+    public FailedWorkflowResponse(@NonNull final String stateName, final Exception e) {
         super(stateName);
         this.stackTraces = e.getStackTrace();
         this.errorMessage = e.getMessage();
     }
 
-    public FailedWorkflowResponse(final String stateName) {
+    public FailedWorkflowResponse(@NonNull final String stateName) {
         super(stateName);
     }
 

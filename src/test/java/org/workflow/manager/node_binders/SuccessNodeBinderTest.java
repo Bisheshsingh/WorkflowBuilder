@@ -27,6 +27,14 @@ public class SuccessNodeBinderTest {
     }
 
     @Test
+    public void to_test() {
+        SuccessWorkflowResponse response = new SuccessWorkflowResponse("TestState");
+
+        assertThrows(NullPointerException.class, () -> binder.bindWaitingResponses(response, response)
+                .to(null));
+    }
+
+    @Test
     void bindDirectResponses_withFailedResponse_throwsBinderException() {
         FailedWorkflowResponse failedResponse = new FailedWorkflowResponse("error");
 

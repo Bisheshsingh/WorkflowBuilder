@@ -26,14 +26,14 @@ public class ProxyAnnotationHandler implements AnnotationHandler {
         Method defaultMethod = null;
 
         for (final Method method : input.getServiceType().getMethods()) {
-            if(method.getName().equals(DEFAULT_METHOD_NAME) && methodVerify(method)) {
+            if (method.getName().equals(DEFAULT_METHOD_NAME) && methodVerify(method)) {
                 defaultMethod = method;
             }
 
             if (method.isAnnotationPresent(ProxyRun.class)
                     && Arrays.asList(method.getAnnotation(ProxyRun.class).levels())
                     .contains(input.getLevel())) {
-                if(!methodVerify(method)) {
+                if (!methodVerify(method)) {
                     throw new AnnotationHandleException("Invalid method " + method.getName());
                 }
 
@@ -44,7 +44,7 @@ public class ProxyAnnotationHandler implements AnnotationHandler {
 
         final String id = input.getServiceType().getSimpleName();
 
-        if(!input.getLevel().equals("default")) {
+        if (input.getLevel() == null || !input.getLevel().equals("default")) {
             log.info("{} : Unable to find method with level {}", id, input.getLevel());
             log.info("{} : Going with default method {}", id, DEFAULT_METHOD_NAME);
         }

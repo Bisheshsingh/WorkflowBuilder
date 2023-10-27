@@ -13,16 +13,23 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.workflow.manager.annotations.ProxyRun;
+import org.workflow.manager.annotations.Retry;
 import org.workflow.manager.constants.WorkflowResponses;
 import org.workflow.manager.contexts.WorkflowNodeExecutionContext;
 import org.workflow.manager.exceptions.AnnotationHandleException;
+import org.workflow.manager.exceptions.ServiceException;
 import org.workflow.manager.exceptions.WorkflowException;
+import org.workflow.manager.models.Service;
 import org.workflow.manager.models.WorkflowResponse;
 import org.workflow.manager.tools.GuiceConfig;
 import org.workflow.manager.verifiers.WorkflowNodeExecutionVerifier;
 import org.workflow.manager.workflow_nodes.WorkflowNode;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -107,19 +114,41 @@ public class WorkflowNodeExecutorTest {
 
     @Test
     public void testExecuteWhenAnnotationProcessorThrowsException() {
+        workflowNode = new WorkflowNode<>(TestA.class);
         when(workflowNodeExecutionVerifier.verify(any())).thenReturn(true);
         when(mockContext.getNode()).thenReturn(workflowNode);
+        when(mockContext.getLevel()).thenReturn("multipleParams");
 
         assertThrows(AnnotationHandleException.class, () -> {
             workflowNodeExecutor.execute(mockContext);
         });
     }
 
+    public static class TestO extends Service<TestContext> {
+        @Override
+        public WorkflowResponse run(TestContext context) {
+            try {
+                performAction(context);
+            } catch (ServiceException e) {
+                throw new RuntimeException(e);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected WorkflowResponse performAction(TestContext input) throws ServiceException {
+            int x=1/0;
+            return null;
+        }
+    }
+
     @Test
     public void testExecuteWhenRunServiceThrowsWorkflowException() {
+        workflowNode = new WorkflowNode<>(TestO.class);
+
         when(workflowNodeExecutionVerifier.verify(any())).thenReturn(true);
         when(mockContext.getNode()).thenReturn(workflowNode);
-        when(mockContext.getLevel()).thenReturn("");
 
         assertThrows(WorkflowException.class, () -> {
             workflowNodeExecutor.execute(mockContext);

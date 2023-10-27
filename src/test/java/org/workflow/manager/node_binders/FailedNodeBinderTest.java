@@ -17,14 +17,14 @@ public class FailedNodeBinderTest {
     private FailedNodeBinder<TestContext> binder;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         Workflow<TestContext> workflow = new TestConfig();
 
         binder = new FailedNodeBinder<>(workflow);
     }
 
     @Test
-    void bindDirectResponses_withFailedResponse_bindsSuccessfully() {
+    public void bindDirectResponses_withFailedResponse_bindsSuccessfully() {
         FailedWorkflowResponse response = new FailedWorkflowResponse("error");
         FailedWorkflowResponse response1 = new FailedWorkflowResponse("error1");
 
@@ -32,14 +32,22 @@ public class FailedNodeBinderTest {
     }
 
     @Test
-    void bindWaitingResponses_withFailedResponse_bindsSuccessfully() {
+    public void bindWaitingResponses_withFailedResponse_bindsSuccessfully() {
         FailedWorkflowResponse response = new FailedWorkflowResponse("error");
 
         assertDoesNotThrow(() -> binder.bindWaitingResponses(response, response).to(TestAHandler.class));
     }
 
     @Test
-    void bindDirectResponses_withSuccessfulResponse_throwsBinderException() {
+    public void to_test() {
+        FailedWorkflowResponse response = new FailedWorkflowResponse("error");
+
+        assertThrows(NullPointerException.class, () -> binder.bindWaitingResponses(response, response)
+                .to(null));
+    }
+
+    @Test
+    public void bindDirectResponses_withSuccessfulResponse_throwsBinderException() {
         SuccessWorkflowResponse successResponse = new SuccessWorkflowResponse("TestState");
 
         assertThrows(BinderException.class, () -> binder.bindDirectResponses(successResponse).to(TestAHandler.class));
