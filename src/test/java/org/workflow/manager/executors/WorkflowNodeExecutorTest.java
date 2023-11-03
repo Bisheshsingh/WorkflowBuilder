@@ -13,8 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.workflow.manager.annotations.ProxyRun;
-import org.workflow.manager.annotations.Retry;
 import org.workflow.manager.constants.WorkflowResponses;
 import org.workflow.manager.contexts.WorkflowNodeExecutionContext;
 import org.workflow.manager.exceptions.AnnotationHandleException;
@@ -26,10 +24,7 @@ import org.workflow.manager.tools.GuiceConfig;
 import org.workflow.manager.verifiers.WorkflowNodeExecutionVerifier;
 import org.workflow.manager.workflow_nodes.WorkflowNode;
 
-import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 

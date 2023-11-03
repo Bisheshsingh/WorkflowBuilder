@@ -56,6 +56,7 @@ public class WorkflowExecutorTest {
         when(executionContext.getWorkflowOperation()).thenReturn(workflowOperation);
         when(executionContext.getConfig()).thenReturn(config);
         when(config.getResponseActions()).thenReturn(new HashMap<>());
+        when(executionContext.getWorkflowExecutor()).thenReturn(workflowExecutor);
         when(workflowStatusVerifier.verify(any())).thenReturn(WorkflowStatus.FORCE_CLOSE);
 
         workflowExecutor.execute(executionContext);

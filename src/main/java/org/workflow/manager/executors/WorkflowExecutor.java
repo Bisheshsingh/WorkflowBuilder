@@ -1,7 +1,6 @@
 package org.workflow.manager.executors;
 
 import com.google.inject.Inject;
-import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.workflow.manager.constants.WorkflowResponses;
@@ -55,7 +54,6 @@ public class WorkflowExecutor<C extends ContextObject> {
         data.getConfig().getResponseActions().put(WorkflowResponses.WAITING_RESPONSE, new HashSet<>());
         this.lock = true;
 
-        WorkflowOrchestrator.init(this);
         WorkflowOrchestrator.orchestrate(data);
         waitForExecution();
         data.getWorkflowOperation().shutDown();
@@ -64,16 +62,17 @@ public class WorkflowExecutor<C extends ContextObject> {
     public void execute(final WorkflowConfig<C> config, final C context,
                         final WorkflowResponse startResponse) throws BinderException {
         final WorkflowExecutionContext<C> executionContext = new WorkflowExecutionContext<>(
-                config, "default", context, new AutoThreadOperation());
+                this, config, "default", context, new AutoThreadOperation());
 
         executionContext.setResponse(startResponse);
         execute(executionContext);
     }
 
     public void execute(final WorkflowConfig<C> config, final C context,
-                        final WorkflowResponse startResponse, final String level) throws BinderException {
+                        final WorkflowResponse startResponse,
+                        final String level) throws BinderException {
         final WorkflowExecutionContext<C> executionContext = new WorkflowExecutionContext<>(
-                config, level, context, new AutoThreadOperation());
+                this, config, level, context, new AutoThreadOperation());
         executionContext.setResponse(startResponse);
         execute(executionContext);
     }
@@ -82,16 +81,16 @@ public class WorkflowExecutor<C extends ContextObject> {
                         final WorkflowResponse startResponse,
                         final WorkflowOperation workflowOperation) throws BinderException {
         final WorkflowExecutionContext<C> executionContext = new WorkflowExecutionContext<>(
-                config, "default", context, workflowOperation);
+                this, config, "default", context, workflowOperation);
         executionContext.setResponse(startResponse);
         execute(executionContext);
     }
 
     public void execute(final WorkflowConfig<C> config, final C context,
-                        final WorkflowResponse startResponse,
-                        final String level, final WorkflowOperation workflowOperation) throws BinderException {
+                        final WorkflowResponse startResponse, final String level,
+                        final WorkflowOperation workflowOperation) throws BinderException {
         final WorkflowExecutionContext<C> executionContext = new WorkflowExecutionContext<>(
-                config, level, context, workflowOperation);
+                this, config, level, context, workflowOperation);
         executionContext.setResponse(startResponse);
         execute(executionContext);
     }

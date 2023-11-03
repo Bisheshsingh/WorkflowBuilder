@@ -58,6 +58,9 @@ public class FailedNodeBinder<C extends ContextObject>
 
         addResponseActions(workflowNode, directResponseDependencies);
         addResponseActions(workflowNode, waitingResponseDependencies);
+
+        waitingResponseDependencies = null;
+        directResponseDependencies = null;
     }
 
     @Override

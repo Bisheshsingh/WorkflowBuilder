@@ -59,7 +59,7 @@ class SuccessfulWorkflowResponseHandlerTest {
 
         handler.handle(mockExecutionContext);
 
-        verify(workflowNodeExecutor, times(4)).execute(any());
+        verify(workflowNodeExecutor).execute(any());
     }
 
     @Test
@@ -68,7 +68,7 @@ class SuccessfulWorkflowResponseHandlerTest {
 
         handler.handle(mockExecutionContext);
 
-        verify(workflowNodeExecutor, times(4)).execute(any());
+        verify(workflowNodeExecutor).execute(any());
     }
 
     @Test
@@ -77,7 +77,7 @@ class SuccessfulWorkflowResponseHandlerTest {
 
         handler.handle(mockExecutionContext);
 
-        verify(workflowNodeExecutor, times(4)).execute(any());
+        verify(workflowNodeExecutor).execute(any());
     }
 
     @Test
@@ -86,6 +86,6 @@ class SuccessfulWorkflowResponseHandlerTest {
 
         handler.handle(mockExecutionContext);
 
-        verify(mockExecutionContext, times(4)).clone();
+        verify(mockExecutionContext).clone();
     }
 }

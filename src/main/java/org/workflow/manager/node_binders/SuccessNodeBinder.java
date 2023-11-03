@@ -71,5 +71,8 @@ public class SuccessNodeBinder<C extends ContextObject> extends NodeBinder<C, Se
 
         addResponseActions(workflowNode, directResponseDependencies);
         addResponseActions(workflowNode, waitingResponseDependencies);
+
+        waitingResponseDependencies = null;
+        directResponseDependencies = null;
     }
 }
